@@ -3,6 +3,8 @@ import deviceRoutes from "./routes/device.routes.js";
 import sensorRoutes from "./routes/sensor.routes.js";
 import weatherRoutes from "./routes/weather.routes.js";
 import thingspeakRoutes from "./routes/thingspeak.routes.js";
+import readingRoutes from "./routes/reading.routes.js";
+import predictionRoutes from "./routes/prediction.routes.js";
 
 const app = express();
 
@@ -19,5 +21,7 @@ app.use("/devices", deviceRoutes);
 app.use("/api/v1/readings", sensorRoutes);
 app.use("/weather", weatherRoutes);
 app.use("/thingspeak", thingspeakRoutes);
+app.use("/api/readings",readingRoutes);
+app.use("/api/predictions",predictionRoutes);
 
 export default app;

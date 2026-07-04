@@ -81,17 +81,20 @@ model historical_readings {
 }
 
 model predictions {
-  prediction_id BigInt   @id @default(autoincrement())
-  device_id     Int
-  predicted_at  DateTime @db.Timestamp(6)
-  predicted_for DateTime @db.Timestamp(6)
-  pm1_0         Decimal  @db.Decimal(5, 2)
-  pm2_5         Decimal  @db.Decimal(5, 2)
-  pm10          Decimal  @db.Decimal(5, 2)
-  temperature   Decimal  @db.Decimal(5, 2)
-  humidity      Decimal  @db.Decimal(5, 2)
-  aqi           Int
-  device        device   @relation(fields: [device_id], references: [device_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_prediction_device")
+  prediction_id  BigInt   @id @default(autoincrement())
+  device_id      Int
+  predicted_at   DateTime @db.Timestamp(6)
+  predicted_for  DateTime @db.Timestamp(6)
+  pm1_0          Decimal  @db.Decimal(5, 2)
+  pm2_5          Decimal  @db.Decimal(5, 2)
+  pm10           Decimal  @db.Decimal(5, 2)
+  temperature    Decimal  @db.Decimal(5, 2)
+  humidity       Decimal  @db.Decimal(5, 2)
+  aqi            Int
+  risk_level     String?  @db.VarChar(50)
+  reason         String?
+  recommendation String?
+  device         device   @relation(fields: [device_id], references: [device_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_prediction_device")
 
   @@index([device_id, predicted_for], map: "idx_prediction_device_time")
 }
