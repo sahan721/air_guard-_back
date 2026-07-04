@@ -1,0 +1,23 @@
+# Python environment
+.venv/
+venv/
+__pycache__/
+*.pyc
+
+# Node
+node_modules/
+
+# Environment secrets
+.env
+*.env
+
+# AI generated files
+ai-model/models/
+ai-model/data/training_dataset.csv
+
+# Logs
+*.log
+
+# System files
+.DS_Store
+Thumbs.db
