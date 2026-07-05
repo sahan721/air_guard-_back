@@ -5,8 +5,11 @@ import weatherRoutes from "./routes/weather.routes.js";
 import thingspeakRoutes from "./routes/thingspeak.routes.js";
 import readingRoutes from "./routes/reading.routes.js";
 import predictionRoutes from "./routes/prediction.routes.js";
+import cors from "cors";
 
 const app = express();
+
+app.use(cors({origin: "*",}));
 
 // Middleware
 app.use(express.json());

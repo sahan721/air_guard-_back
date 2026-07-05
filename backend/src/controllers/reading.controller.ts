@@ -1,7 +1,18 @@
 import { Request, Response } from "express";
 
-import { getCurrentReading } from "../services/reading.service.js";
 
+import {
+  getCurrentReading,
+  getHistoryReadings,
+}
+from "../services/reading.service.js";
+
+
+
+
+// ===============================
+// CURRENT READING
+// ===============================
 
 export async function getCurrentReadingController(
   req: Request,
@@ -25,39 +36,49 @@ export async function getCurrentReadingController(
 
     res.json({
 
-      device_id:
-        reading.device_id,
+
+  device_id:
+    reading.device_id,
 
 
-      recorded_at:
-        reading.recorded_at,
+  recorded_at:
+    reading.recorded_at,
 
 
-      pm1_0:
-        reading.pm1_0,
+  pm1_0:
+    reading.pm1_0,
 
 
-      pm2_5:
-        reading.pm2_5,
+  pm2_5:
+    reading.pm2_5,
 
 
-      pm10:
-        reading.pm10,
+  pm10:
+    reading.pm10,
 
 
-      temperature:
-        reading.temperature,
+  temperature:
+    reading.temperature,
 
 
-      humidity:
-        reading.humidity,
+  humidity:
+    reading.humidity,
 
 
-      aqi:
-        reading.aqi,
+  aqi:
+    reading.aqi,
 
 
-    });
+
+  sensor_online:
+    reading.sensor_online,
+
+
+  minutes_since_update:
+    reading.minutes_since_update,
+
+
+});
 
 
   } catch (error) {
@@ -67,6 +88,57 @@ export async function getCurrentReadingController(
 
       message:
         "Reading not found",
+
+    });
+
+
+  }
+
+
+}
+
+
+
+
+
+// ===============================
+// HISTORY READINGS
+// ===============================
+
+export async function getHistoryReadingController(
+  req: Request,
+  res: Response
+) {
+
+
+  try {
+
+
+    const deviceId = Number(
+      req.params.deviceId
+    );
+
+
+    const history =
+      await getHistoryReadings(
+        deviceId
+      );
+
+
+
+    res.json(
+      history
+    );
+
+
+
+  } catch (error) {
+
+
+    res.status(500).json({
+
+      message:
+        "History readings not found",
 
     });
 
