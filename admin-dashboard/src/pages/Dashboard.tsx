@@ -2,15 +2,36 @@ import { useEffect, useState } from "react";
 
 
 import {
+
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+
+} from "recharts";
+
+
+
+import {
+
   getCurrentReading,
   getPrediction,
+  getHistoryReadings,
+
 } from "../services/api";
 
 
+
 import type {
+
   CurrentReading,
   Prediction,
+  HistoryReading,
+
 } from "../types/airQuality";
+
 
 
 
@@ -25,6 +46,12 @@ export default function Dashboard() {
 
   const [prediction, setPrediction] =
     useState<Prediction | null>(null);
+
+
+  const [history, setHistory] =
+    useState<HistoryReading[]>([]);
+
+
 
 
 
@@ -44,15 +71,18 @@ export default function Dashboard() {
         await getPrediction();
 
 
-
-      setReading(
-        current
-      );
+      const historyResult =
+        await getHistoryReadings();
 
 
-      setPrediction(
-        ai
-      );
+
+      setReading(current);
+
+
+      setPrediction(ai);
+
+
+      setHistory(historyResult);
 
 
 
@@ -60,8 +90,11 @@ export default function Dashboard() {
 
 
       console.log(
+
         "Dashboard data loading failed:",
+
         error
+
       );
 
 
@@ -69,6 +102,7 @@ export default function Dashboard() {
 
 
   };
+
 
 
 
@@ -90,7 +124,9 @@ export default function Dashboard() {
     fetchData();
 
 
+
   }, []);
+
 
 
 
@@ -127,10 +163,47 @@ export default function Dashboard() {
 
 
 
+  const getAQIStatus = () => {
+
+
+    if (reading.aqi <= 50)
+
+      return "Good";
+
+
+    if (reading.aqi <= 100)
+
+      return "Moderate";
+
+
+    if (reading.aqi <= 150)
+
+      return "Unhealthy Sensitive";
+
+
+    if (reading.aqi <= 200)
+
+      return "Unhealthy";
+
+
+    return "Hazardous";
+
+
+  };
+
+
+
+
+
+
+
+
 
   return (
 
+
     <div>
+
 
 
       <h1 className="text-3xl font-bold mb-8">
@@ -145,6 +218,12 @@ export default function Dashboard() {
 
 
 
+
+
+
+      {/* CARDS */}
+
+
       <div className="grid grid-cols-4 gap-6">
 
 
@@ -152,7 +231,11 @@ export default function Dashboard() {
 
 
 
-        {/* AQI CARD */}
+
+
+
+        {/* AQI */}
+
 
         <div className="bg-slate-900 p-5 rounded-xl">
 
@@ -164,12 +247,18 @@ export default function Dashboard() {
           </p>
 
 
-
           <h2 className="text-5xl font-bold text-cyan-400 mt-3">
 
             {reading.aqi}
 
           </h2>
+
+
+          <p className="mt-2 text-gray-400">
+
+            {getAQIStatus()}
+
+          </p>
 
 
         </div>
@@ -181,7 +270,10 @@ export default function Dashboard() {
 
 
 
-        {/* SENSOR STATUS */}
+
+
+        {/* SENSOR */}
+
 
         <div className="bg-slate-900 p-5 rounded-xl">
 
@@ -195,6 +287,7 @@ export default function Dashboard() {
 
 
           <h2
+
             className={
 
               reading.sensor_online
@@ -204,24 +297,33 @@ export default function Dashboard() {
               : "text-red-400 text-3xl mt-3"
 
             }
+
           >
 
 
             {
+
               reading.sensor_online
+
               ? "ONLINE"
+
               : "OFFLINE"
+
             }
 
 
           </h2>
 
 
+
           <p className="text-gray-500 mt-2">
 
-            Last update {reading.minutes_since_update} min ago
+
+            {reading.minutes_since_update} min ago
+
 
           </p>
+
 
 
         </div>
@@ -233,7 +335,11 @@ export default function Dashboard() {
 
 
 
-        {/* TEMPERATURE */}
+
+
+
+        {/* TEMP */}
+
 
         <div className="bg-slate-900 p-5 rounded-xl">
 
@@ -243,7 +349,6 @@ export default function Dashboard() {
             Temperature
 
           </p>
-
 
 
           <h2 className="text-4xl mt-3">
@@ -263,17 +368,125 @@ export default function Dashboard() {
 
 
 
-        {/* AI */}
+
+        {/* HUMIDITY */}
+
 
         <div className="bg-slate-900 p-5 rounded-xl">
 
 
           <p className="text-gray-400">
 
-            AI Prediction
+            Humidity
 
           </p>
 
+
+          <h2 className="text-4xl mt-3 text-blue-400">
+
+            {reading.humidity} %
+
+          </h2>
+
+
+        </div>
+
+
+
+
+
+
+
+
+
+
+        {/* PM2.5 */}
+
+
+        <div className="bg-slate-900 p-5 rounded-xl">
+
+
+          <p className="text-gray-400">
+
+            PM2.5
+
+          </p>
+
+
+          <h2 className="text-4xl mt-3 text-orange-400">
+
+            {reading.pm2_5}
+
+          </h2>
+
+
+          <p className="text-gray-500">
+
+            µg/m³
+
+          </p>
+
+
+        </div>
+
+
+
+
+
+
+
+
+
+
+        {/* PM10 */}
+
+
+        <div className="bg-slate-900 p-5 rounded-xl">
+
+
+          <p className="text-gray-400">
+
+            PM10
+
+          </p>
+
+
+          <h2 className="text-4xl mt-3 text-yellow-400">
+
+            {reading.pm10}
+
+          </h2>
+
+
+          <p className="text-gray-500">
+
+            µg/m³
+
+          </p>
+
+
+        </div>
+
+
+
+
+
+
+
+
+
+
+        {/* AI */}
+
+
+        <div className="bg-slate-900 p-5 rounded-xl">
+
+
+          <p className="text-gray-400">
+
+            AI Risk
+
+          </p>
 
 
           <h2 className="text-3xl mt-3 text-cyan-400">
@@ -287,12 +500,78 @@ export default function Dashboard() {
 
 
 
+
       </div>
 
 
 
 
 
+
+
+
+
+      {/* GRAPH */}
+
+
+      <div className="bg-slate-900 rounded-xl p-6 mt-8">
+
+
+        <h2 className="text-xl font-bold mb-5">
+
+          24 Hour AQI History
+
+        </h2>
+
+
+
+        <ResponsiveContainer
+          width="100%"
+          height={300}
+        >
+
+
+          <LineChart data={history}>
+
+
+            <XAxis dataKey="recorded_at" />
+
+
+            <YAxis />
+
+
+            <Tooltip />
+
+
+            <Line
+
+              type="monotone"
+
+              dataKey="aqi"
+
+              strokeWidth={3}
+
+            />
+
+
+          </LineChart>
+
+
+        </ResponsiveContainer>
+
+
+      </div>
+
+
+
+
+
+
+
+
+
+
+      {/* AI RECOMMENDATION */}
 
 
       <div className="bg-slate-900 rounded-xl p-6 mt-8">
@@ -305,11 +584,13 @@ export default function Dashboard() {
         </h2>
 
 
+
         <p className="text-gray-300">
 
           {prediction?.recommendation}
 
         </p>
+
 
 
         <p className="text-gray-500 mt-4">
@@ -319,13 +600,14 @@ export default function Dashboard() {
         </p>
 
 
-
       </div>
 
 
 
 
+
     </div>
+
 
   );
 

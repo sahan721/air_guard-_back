@@ -12,7 +12,23 @@ type DeviceCreateData = {
 type DeviceUpdateData = Partial<DeviceCreateData>;
 
 export async function getAllDevices() {
-  return await prisma.device.findMany();
+
+
+  return await prisma.device.findMany({
+
+
+    include: {
+
+
+      current_readings: true,
+
+
+    },
+
+
+  });
+
+
 }
 
 export async function getDeviceById(deviceId: number) {

@@ -63,3 +63,64 @@ export interface Prediction {
 
 
 }
+
+export interface HistoryReading {
+
+
+  recorded_at: string;
+
+
+  pm1_0: string;
+
+
+  pm2_5: string;
+
+
+  pm10: string;
+
+
+  temperature: string;
+
+
+  humidity: string;
+
+
+  aqi: number;
+
+
+}
+
+export type Device = {
+
+
+  device_id: number;
+
+
+  device_name: string;
+
+
+  location_name: string;
+
+
+  latitude: number;
+
+
+  longitude: number;
+
+
+  status: string;
+
+
+  current_readings?: {
+
+
+    aqi: number;
+
+
+    recorded_at: string;
+
+
+  };
+
+
+};
